@@ -10,10 +10,11 @@ Requires Node.js
 
 * Clone the git repository, and install dependencies
 
-    git clone git://github.com/neyric/gh-issues-gantt.git
-    cd gh-issues-gantt
-    npm install
-
+````sh
+$ git clone git://github.com/neyric/gh-issues-gantt.git
+$ cd gh-issues-gantt
+$ npm install
+````
 
 ## Configuration
 
@@ -42,3 +43,7 @@ Open http://localhost:3000
 * Add a refresh button
 
 
+
+## Credits
+
+ * Jquery Gantt widget: http://taitems.github.com/jQuery.Gantt/
