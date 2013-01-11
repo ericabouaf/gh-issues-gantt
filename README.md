@@ -27,7 +27,7 @@ $ npm install
 
     node server.js
 
-Open http://localhost:3000
+Open http://localhost:3001
 
 /!\ The issues are downloaded ONLY the first time you access the page.
 
