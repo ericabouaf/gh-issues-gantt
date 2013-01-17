@@ -14,6 +14,9 @@ var Planning = {
 
    init: function() {
 
+      // Render the refresh button
+      this.initRefreshButton();
+      
       // Sort milestones by due date
       this.sorted_milestones = milestones.sort( function (a,b){
          return a.due_on > b.due_on ? 1 : -1; 
@@ -55,6 +58,15 @@ var Planning = {
 
    },
 
+   initRefreshButton: function () {
+      $("#refresh-button").on("click", function () {
+         $.ajax('/trigger_refresh', {
+            success: function () { window.location.reload(); }
+         });
+      });
+   },
+   
+   
    onItemClick: function(data) {
       var baseUrl = 'https://github.com/'+config.repo, url;
 
