@@ -247,7 +247,7 @@ var Planning = {
    getPlanningByMilestone: function () {
 
       // for each milestone get issues assigned dates and group by assignee
-      var planning = [];
+      var planning = [], milestone_obj;
 
       for(var m = 0 ; m < this.sorted_milestones.length ; m++) {
          var milestone = this.sorted_milestones[m];
@@ -272,12 +272,14 @@ var Planning = {
             
          }, this);
 
-         var releaseDate = (new Date(milestone.due_on)).getMidnight().getTime();
+         // null if no due date
+         var releaseDate = !!milestone.due_on ? (new Date(milestone.due_on)).getMidnight().getTime() : null;
 
-         planning.push({
-               name: milestone.title,
-               desc: " ",
-               values: [{
+         milestone_obj = {
+            name: milestone.title,
+            desc: " ",
+            values: [
+               {
                   from: "/Date("+min+")/",
                   to: "/Date("+max+")/",
                   label: milestone.title,
@@ -286,19 +288,25 @@ var Planning = {
                   dataObj: {
                      milestone: milestone.number
                   }
-               },
-               {
-                  from: "/Date("+releaseDate+")/",
-                  to: "/Date("+releaseDate+")/",
-                  label: "★",
-                  desc: "Due date for : "+milestone.title,
-                  customClass: "ganttYellow",
-                  dataObj: {
-                     milestone_release: milestone.number
-                  }
                }
-               ]
-         });
+            ]
+         };
+         
+         // add a yellow star to show release date (if set)
+         if (releaseDate) {
+            milestone_obj.values.push({
+               from: "/Date("+releaseDate+")/",
+               to: "/Date("+releaseDate+")/",
+               label: "★",
+               desc: "Due date for : "+milestone.title,
+               customClass: "ganttYellow",
+               dataObj: {
+                  milestone_release: milestone.number
+               }
+            });
+         }
+         
+         planning.push(milestone_obj);
 
          // Génère le planning
          for(var d in itsDevs) {
