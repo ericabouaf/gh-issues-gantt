@@ -45,10 +45,13 @@ module.exports = function(config) {
          var issues = (tmpIssues ? tmpIssues : []).concat(JSON.parse(body));
 
          var links = {};
-         response.headers.link.split(', ').forEach(function(headLink){
-            var s = headLink.split('; ');
-            links[s[1]] = s[0].substr(1, s[0].length-2);
-         });
+         //check if there is a link, stops a crash when number of issues <=100
+         if (response.headers.link != null) {
+            response.headers.link.split(', ').forEach(function(headLink){
+               var s = headLink.split('; ');
+               links[s[1]] = s[0].substr(1, s[0].length-2);
+            });
+         }
 
          if(links['rel="next"']) {
             refreshIssues(cb, links['rel="next"'], issues);
