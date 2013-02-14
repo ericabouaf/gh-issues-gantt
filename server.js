@@ -11,6 +11,12 @@ app.get('/', function(req, res){
    res.sendfile(__dirname + '/public/index.html');
 });
 
+
+app.get('/overview', function(req, res){
+   res.sendfile(__dirname + '/public/overview.html');
+});
+
+
 app.get('/issues.js', function(req, res) {
    res.set('Content-Type', 'application/javascript');
    github.fetchIssues(function(err, issues, status) {

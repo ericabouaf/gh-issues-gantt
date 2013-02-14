@@ -31,6 +31,10 @@ var Planning = {
       // Run the plannification algorithm
       this.planner();
 
+   },
+
+   display: function() {
+
       // Render the Gantt charts
       $(".gantt-milestone").gantt({
          source: this.getPlanningByMilestone(),
@@ -118,14 +122,17 @@ var Planning = {
    getDurationForIssue: function (issue) {
 
       var numericLabels = issue.labels.filter(function(l){ return l.name.match(/^\d+D$/); }),
-          name;
+          name,
+          duration = config.defaultDuration;
 
       if(numericLabels.length > 0) {
          name = numericLabels[0].name;
-         return parseInt( name.substr(0, name.length-1), 10);
+         duration = parseInt( name.substr(0, name.length-1), 10);
       }
 
-      return config.defaultDuration;
+      issue.calculatedDuration = duration;
+
+      return duration;
    },
 
 
