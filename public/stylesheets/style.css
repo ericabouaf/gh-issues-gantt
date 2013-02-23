@@ -1,0 +1,14 @@
+// Personal styles
+
+body { font-family: Helvetica, Arial, sans-serif; font-size: 13px; padding: 0 0 50px 0; }
+
+.contain { width: 1400px; margin: 0 auto;}
+
+.fn-gantt .leftPanel .fn-label, .fn-gantt .leftPanel .name { width: 190px; }
+.fn-gantt .leftPanel .desc { width: 195px; }
+.fn-gantt .leftPanel { width: 385px; }
+
+.fn-gantt .ganttYellow { background-color: #FEEA77; }
+
+.fn-gantt .ganttPurple { background-color: #DCBFEE; }
+.fn-gantt .ganttPurple .fn-label { color: #4F1D6B; }
