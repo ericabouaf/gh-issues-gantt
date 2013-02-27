@@ -14,6 +14,9 @@ var Planning = {
 
    init: function() {
 
+      // Render the refresh button
+      this.initRefreshButton();
+      
       // Sort milestones by due date
       this.sorted_milestones = milestones.sort( function (a,b){
          return a.due_on > b.due_on ? 1 : -1; 
@@ -27,6 +30,10 @@ var Planning = {
 
       // Run the plannification algorithm
       this.planner();
+
+   },
+
+   display: function() {
 
       // Render the Gantt charts
       $(".gantt-milestone").gantt({
@@ -55,6 +62,15 @@ var Planning = {
 
    },
 
+   initRefreshButton: function () {
+      $("#refresh-button").on("click", function () {
+         $.ajax('/trigger_refresh', {
+            success: function () { window.location.reload(); }
+         });
+      });
+   },
+   
+   
    onItemClick: function(data) {
       var baseUrl = 'https://github.com/'+config.repo, url;
 
@@ -106,14 +122,17 @@ var Planning = {
    getDurationForIssue: function (issue) {
 
       var numericLabels = issue.labels.filter(function(l){ return l.name.match(/^\d+D$/); }),
-          name;
+          name,
+          duration = config.defaultDuration;
 
       if(numericLabels.length > 0) {
          name = numericLabels[0].name;
-         return parseInt( name.substr(0, name.length-1), 10);
+         duration = parseInt( name.substr(0, name.length-1), 10);
       }
 
-      return config.defaultDuration;
+      issue.calculatedDuration = duration;
+
+      return duration;
    },
 
 
@@ -247,7 +266,7 @@ var Planning = {
    getPlanningByMilestone: function () {
 
       // for each milestone get issues assigned dates and group by assignee
-      var planning = [];
+      var planning = [], milestone_obj;
 
       for(var m = 0 ; m < this.sorted_milestones.length ; m++) {
          var milestone = this.sorted_milestones[m];
@@ -272,12 +291,14 @@ var Planning = {
             
          }, this);
 
-         var releaseDate = (new Date(milestone.due_on)).getMidnight().getTime();
+         // null if no due date
+         var releaseDate = !!milestone.due_on ? (new Date(milestone.due_on)).getMidnight().getTime() : null;
 
-         planning.push({
-               name: milestone.title,
-               desc: " ",
-               values: [{
+         milestone_obj = {
+            name: milestone.title,
+            desc: " ",
+            values: [
+               {
                   from: "/Date("+min+")/",
                   to: "/Date("+max+")/",
                   label: milestone.title,
@@ -286,19 +307,25 @@ var Planning = {
                   dataObj: {
                      milestone: milestone.number
                   }
-               },
-               {
-                  from: "/Date("+releaseDate+")/",
-                  to: "/Date("+releaseDate+")/",
-                  label: "★",
-                  desc: "Due date for : "+milestone.title,
-                  customClass: "ganttYellow",
-                  dataObj: {
-                     milestone_release: milestone.number
-                  }
                }
-               ]
-         });
+            ]
+         };
+         
+         // add a yellow star to show release date (if set)
+         if (releaseDate) {
+            milestone_obj.values.push({
+               from: "/Date("+releaseDate+")/",
+               to: "/Date("+releaseDate+")/",
+               label: "★",
+               desc: "Due date for : "+milestone.title,
+               customClass: "ganttYellow",
+               dataObj: {
+                  milestone_release: milestone.number
+               }
+            });
+         }
+         
+         planning.push(milestone_obj);
 
          // Génère le planning
          for(var d in itsDevs) {
