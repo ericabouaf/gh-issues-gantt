@@ -7,6 +7,8 @@ var github = require('./github')(config);
 
 app.use(express["static"](__dirname + '/public'));
 
+app.use(express.bodyParser());
+
 app.get('/', function(req, res){
    res.sendfile(__dirname + '/public/index.html');
 });
@@ -39,6 +41,16 @@ app.get('/trigger_refresh', function(req, res) {
       res.send("");
    });
 });
+
+
+app.post('/update_ms_due_on', function(req, res) {
+
+   github.update_ms_due_on(req.body.milestoneId, req.body.due_on, function () {
+      res.send("");
+   });
+
+});
+
 
 app.listen(3001);
 console.log('Listening on port 3001');

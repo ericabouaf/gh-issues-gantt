@@ -66,7 +66,7 @@
 
 				// DOM templating
 
-				var e = $("<div><h3 class='milestoneName'></h3>"+
+				var e = $("<div class='ms'><h3 class='milestoneName' id='milestone-"+plannedMilestone.number+"'></h3>"+
 						  "<p><span class='description'></span></p>"+
 						  "<p>Date de release fixée: <span class='releaseDate'></span></p>"+
 						  "<p>Développement : du <span class='startDate'></span> au <span class='endDate'></span> (reste <span class='totalJh'></span> j.h)</p>"+
@@ -91,8 +91,36 @@
 				}
 
 				$('#milestonesContainer').append(e);
+
 			});
 
+	
+				$('.endDate').on('click', function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+
+					if( confirm("Fix this as the new release date ?") ) {
+
+						var h3id = $(this).parent().parent().children()[0].id;
+						var milestoneId = (h3id.split('-'))[1];
+
+						var fr_date = this.innerHTML.split('/');
+						var date = fr_date[2]+"-"+fr_date[1]+"-"+fr_date[0]+"T00:00:00Z";
+
+						//console.log( milestoneId, date );
+
+						$.ajax({
+  							url: "update_ms_due_on",
+  							type: "POST",
+						 	data: {
+						 		milestoneId: milestoneId,
+						 		due_on: date
+						 	}
+						}).done(function() {
+						});
+
+					}
+				});
 
 		});	
 	</script>

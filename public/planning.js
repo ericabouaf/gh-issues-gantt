@@ -296,6 +296,7 @@ var Planning = {
 
          milestone_obj = {
             name: milestone.title,
+            number: milestone.number,
             desc: " ",
             values: [
                {

@@ -93,7 +93,25 @@ module.exports = function(config) {
    return {
       fetchIssues: fetchIssues,
       fetchMilestones: fetchMilestones,
-      refresh: refresh
+      refresh: refresh,
+
+      update_ms_due_on: function(milestoneId, due_on, cb) {
+         var url = baseUrl+"/milestones/"+milestoneId;
+         console.log(url);
+
+         request({
+            method:  "PATCH",
+            url: url,
+            json: {
+               "due_on": due_on
+            },
+            'auth': config.username+":"+config.password
+         }, function (error, response, body) {
+            console.log(body);
+            cb(null, null);
+         });
+      }
+
    };
 
 };
