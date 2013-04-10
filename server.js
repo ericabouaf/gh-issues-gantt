@@ -52,5 +52,5 @@ app.post('/update_ms_due_on', function(req, res) {
 });
 
 
-app.listen(3001);
-console.log('Listening on port 3001');
+app.listen(config.port);
+console.log('Listening on port '+config.port);
