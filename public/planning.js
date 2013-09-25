@@ -35,9 +35,12 @@ var Planning = {
 
    display: function() {
 
-      // Render the Gantt charts
+      var source = this.getPlanningByMilestone();
+      console.log(source);
+
+     // Render the Gantt charts
       $(".gantt-milestone").gantt({
-         source: this.getPlanningByMilestone(),
+         source: source,
          navigate: "scroll",
          scale: "days",
          maxScale: "months",
@@ -271,9 +274,12 @@ var Planning = {
       for(var m = 0 ; m < this.sorted_milestones.length ; m++) {
          var milestone = this.sorted_milestones[m];
 
+console.log(milestone.title);
          if(config.excludedMilestones.indexOf(milestone.title) != -1) {
-            break;
+//            break;
          }
+else {
+console.log(milestone.title);
 
          var itsDevs = {};
          var min = (new Date(2018, 0, 1)).getTime(), max = (new Date()).getTime();
@@ -337,7 +343,7 @@ var Planning = {
             });
          }
 
-
+}
       }
 
       return planning;

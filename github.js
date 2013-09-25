@@ -1,4 +1,6 @@
-var request = require('request');
+var request   = require('request'),
+    // github's API requires that we use specify a userAgent
+    userAgent = "gh-issues-gantt/0.0.1"; // should match package.json
 
 module.exports = function(config) {
 
@@ -39,7 +41,10 @@ module.exports = function(config) {
       console.log(theUrl);
       request.get({
          url: theUrl,
-         'auth': config.username+":"+config.password
+         'auth': config.username+":"+config.password,
+         headers: {
+            'User-Agent': userAgent
+         }
       }, function (error, response, body) {
 
          var issues = (tmpIssues ? tmpIssues : []).concat(JSON.parse(body));
@@ -70,7 +75,10 @@ module.exports = function(config) {
 
       request.get({
          url: baseUrl+"/milestones?per_page=100&status=open",
-         'auth': config.username+":"+config.password
+         'auth': config.username+":"+config.password,
+         headers: {
+            'User-Agent': userAgent
+         }
       }, function (error, response, body) {
          memo.milestones.value  = JSON.parse(body);
          memo.milestones.status = "fresh";
@@ -105,7 +113,10 @@ module.exports = function(config) {
             json: {
                "due_on": due_on
             },
-            'auth': config.username+":"+config.password
+            'auth': config.username+":"+config.password,
+            headers: {
+               'User-Agent': userAgent
+            }
          }, function (error, response, body) {
             console.log(body);
             cb(null, null);
@@ -115,3 +126,4 @@ module.exports = function(config) {
    };
 
 };
+
