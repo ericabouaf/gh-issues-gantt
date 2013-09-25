@@ -41,8 +41,14 @@
 	<script>
 		$(function() {
 			"use strict";
+
+			$("#refresh-button").on("click", function () {
+         		$.ajax('/trigger_refresh', {
+            		success: function () { window.location.reload(); }
+         		});
+      		});
+
 			Planning.init();
-			Planning.display();
 		});	
 	</script>
 </body>
