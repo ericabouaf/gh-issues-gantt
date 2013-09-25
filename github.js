@@ -1,5 +1,6 @@
 var request   = require('request'),
     // github's API requires that we use specify a userAgent
+    // (see: http://developer.github.com/v3/#user-agent-required)
     userAgent = "gh-issues-gantt/0.0.1"; // should match package.json
 
 module.exports = function(config) {
