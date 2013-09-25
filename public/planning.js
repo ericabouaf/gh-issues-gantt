@@ -324,6 +324,13 @@ var Planning = {
 
    init: function () {
 
+
+      $("#refresh-button").on("click", function () {
+         $.ajax('/trigger_refresh', {
+            success: function () { window.location.reload(); }
+         });
+      });
+
       // Index milestones by id & add milestone issues
       milestones.forEach(function(ghAttributes) {
          if(config.excludedMilestones.indexOf(ghAttributes.title) == -1) {

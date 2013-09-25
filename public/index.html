@@ -4,9 +4,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Github issues Gantt</title>
 	<meta charset="utf-8">
-    <link rel="stylesheet" href="http://taitems.github.com/jQuery.Gantt/css/style.css">
+    <link rel="stylesheet" href="/lib/jQuery.Gantt/css/style.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
-    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
 </head>
 <body>
 
@@ -26,10 +25,8 @@
 			<div class="gantt-dev"></div>
 		</div>
     
-	<script src="/lib/jquery-1.7.2.min.js"></script>
-	<script src="/lib/jquery.fn.gantt.js"></script>
-	<script src="/lib/bootstrap-tooltip.js"></script>
-	<script src="/lib/bootstrap-popover.js"></script>
+	<script src="/lib/jquery-1.10.2.min.js"></script>
+	<script src="/lib/jQuery.Gantt/js/jquery.fn.gantt.min.js"></script>
 
 	<!-- From server -->
 	<script src="/issues.js"></script>
@@ -41,13 +38,6 @@
 	<script>
 		$(function() {
 			"use strict";
-
-			$("#refresh-button").on("click", function () {
-         		$.ajax('/trigger_refresh', {
-            		success: function () { window.location.reload(); }
-         		});
-      		});
-
 			Planning.init();
 		});	
 	</script>
