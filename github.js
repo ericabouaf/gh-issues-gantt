@@ -38,7 +38,7 @@ module.exports = function(config) {
 
    function refreshIssues (cb, url, tmpIssues) {
 
-      var theUrl = url || baseUrl+"/issues?per_page=100&status=open";
+      var theUrl = url || baseUrl+"/issues?per_page=100&status=open&direction=asc";
       console.log(theUrl);
       request.get({
          url: theUrl,

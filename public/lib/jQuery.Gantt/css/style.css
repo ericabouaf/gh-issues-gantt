@@ -206,8 +206,15 @@
     font-size: 11px;
 }
 
-.fn-gantt .ganttRed {
+.fn-gantt .ganttRose {
     background-color: #F9C4E1;
+}
+.fn-gantt .ganttRose .fn-label {
+    color: #78436D !important;
+}
+
+.fn-gantt .ganttRed {
+    background-color: #FF0000;
 }
 .fn-gantt .ganttRed .fn-label {
     color: #78436D !important;

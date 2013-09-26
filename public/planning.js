@@ -49,7 +49,7 @@ Issue.prototype = {
          to: "/Date("+this.planning.end.getTime()+")/",
          label: this.title,
          desc: '#'+this.number + ': ' + this.title,
-         customClass: config.colorByDev[dev] || "ganttRed",
+         customClass: config.colorByDev[dev] || "ganttRose",
          dataObj: {
             issue: this.number
          }
@@ -79,6 +79,7 @@ Issue.prototype = {
 var Milestone = function(ghAttributes) {
    this._ghAttributes = ghAttributes;
    this.issues = [];
+   this.issuesByDev = {};
 
    this.id = ghAttributes.id;
    this.due_on = ghAttributes.due_on;
@@ -93,30 +94,29 @@ Milestone.prototype = {
 
    // assign tickets to each developper
    plan: function() {
+
+      this.minDate = (new Date(2018, 0, 1)).getTime();
+      this.maxDate = (new Date()).getTime();
+
       this.issues.forEach(function(issue) {
          issue.plan();
-      });
+
+         var dev = issue.getDevName();
+         if(!this.issuesByDev[dev]) { this.issuesByDev[dev] = []; }
+         this.issuesByDev[dev].push( issue );
+
+         if(issue.planning.start.getTime() < this.minDate)
+            this.minDate = issue.planning.start.getTime();
+
+         if(issue.planning.end.getTime() > this.maxDate)
+            this.maxDate = issue.planning.end.getTime();
+
+      }, this);
    },
 
-   getGanttPlanning: function() {
+   getGanttPlanning: function(options) {
 
       var items = [];
-
-      var itsDevs = {};
-      var min = (new Date(2018, 0, 1)).getTime(), max = (new Date()).getTime();
-
-      this.issues.forEach(function(issue){
-         var dev = issue.getDevName();
-         if(!itsDevs[dev]) { itsDevs[dev] = []; }
-         itsDevs[dev].push( issue.ganttItem() );
-
-         if(issue.planning.start.getTime() < min)
-            min = issue.planning.start.getTime();
-
-         if(issue.planning.end.getTime() > max)
-            max = issue.planning.end.getTime();
-         
-      }, this);
 
       // null if no due date
       var releaseDate = !!this.due_on ? (new Date(this.due_on)).getMidnight().getTime() : null;
@@ -127,13 +127,13 @@ Milestone.prototype = {
          desc: " ",
          values: [
             {
-               from: "/Date("+min+")/",
-               to: "/Date("+max+")/",
+               from: "/Date("+this.minDate+")/",
+               to: "/Date("+this.maxDate+")/",
                label: this.title,
                desc: this.title,
-               customClass: "ganttOrange",
+               customClass: (!!releaseDate && releaseDate < this.maxDate) ? "ganttRed" : "ganttOrange",
                dataObj: {
-                  milestone: this.number
+                  milestone: this._ghAttributes.number
                }
             }
          ]
@@ -148,20 +148,25 @@ Milestone.prototype = {
             desc: "Due date for : "+this.title,
             customClass: "ganttYellow",
             dataObj: {
-               milestone_release: this.number
+               milestone_release: this._ghAttributes.number
             }
          });
       }
       
       items.push(milestone_obj);
 
-      // Génère le planning
-      for(var d in itsDevs) {
-         items.push({
-            name: " ",
-            desc: d,
-            values: itsDevs[d]
-         });
+
+      if(!options || !options.skip_issues) {
+
+         // Génère le planning
+         for(var d in this.issuesByDev) {
+            items.push({
+               name: " ",
+               desc: d,
+               values: this.issuesByDev[d].map(function(issue) { return issue.ganttItem(); })
+            });
+         }
+
       }
 
       return items;
@@ -169,10 +174,10 @@ Milestone.prototype = {
 
 };
 
-Milestone.getGanttPlanning = function() {
+Milestone.getGanttPlanning = function(options) {
    var planning = [];
    Milestone.all.forEach(function(milestone) {
-      planning = planning.concat(milestone.getGanttPlanning());
+      planning = planning.concat(milestone.getGanttPlanning(options));
    });
    return planning;
 };
@@ -279,7 +284,7 @@ Developper.prototype = {
                to: "/Date("+holiday.end.getTime()+")/",
                label: holiday.title || 'holiday',
                desc: holiday.title || 'holiday',
-               customClass: config.colorByDev[this.name] || "ganttRed"
+               customClass: config.colorByDev[this.name] || "ganttRose"
             };
          });
 
@@ -380,6 +385,7 @@ var Planning = {
       });
 
 
+
       // Display Gantt
       var devPlanning = Developper.getGanttPlanning();
       $(".gantt-dev").gantt({
@@ -394,10 +400,29 @@ var Planning = {
          }
       });
 
+
+      // Display Gantt
+      var milestonePlanning = Milestone.getGanttPlanning({skip_issues: true}).sort( function (a,b){
+            return a.values[0].from > b.values[0].from ? 1 : -1; 
+         });
+      $(".gantt-milestone-only").gantt({
+         source: milestonePlanning,
+         navigate: "scroll",
+         scale: "days",
+         maxScale: "months",
+         minScale: "days",
+         itemsPerPage: 100,
+         onItemClick: function(data) {
+            Planning.onItemClick(data);
+         }
+      });
+
+
    },
 
 
    onItemClick: function(data) {
+
       var baseUrl = 'https://github.com/'+config.repo, url;
 
       if(data.issue) { url = baseUrl + '/issues/'+data.issue; }
