@@ -338,7 +338,7 @@ var Planning = {
 
       // Index milestones by id & add milestone issues
       milestones.forEach(function(ghAttributes) {
-         if(config.excludedMilestones.indexOf(ghAttributes.title) == -1) {
+         if(config.excludedMilestones.indexOf(ghAttributes.title) == -1 && !!ghAttributes.due_on) {
             new Milestone(ghAttributes);
          }
       });
