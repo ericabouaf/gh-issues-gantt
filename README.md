@@ -20,7 +20,7 @@ $ npm install
 
 * copy config.example.js to config.js, and set the repo GitHub credentials
 
-* copy public/config.example.js to public/config.js, and edit the options
+* copy public/config.example.js to config.js, and edit the options
 
 
 ## Start the server
