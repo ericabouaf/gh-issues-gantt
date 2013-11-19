@@ -22,7 +22,7 @@ app.get('/overview', function(req, res){
 app.get('/issues.js', function(req, res) {
    res.set('Content-Type', 'application/javascript');
    github.fetchIssues(function(err, issues, status) {
-      res.send("var issues = " + JSON.stringify(issues) + ";\n" +
+      res.send("var issues = " + JSON.stringify(issues, null, 3) + ";\n" +
                "var status = " + JSON.stringify(status) + ";");
    });
 });
@@ -30,7 +30,7 @@ app.get('/issues.js', function(req, res) {
 app.get('/milestones.js', function(req, res) {
    res.set('Content-Type', 'application/javascript');
    github.fetchMilestones(function(err, milestones, status) {
-      res.send("var milestones = " + JSON.stringify(milestones) + ";\n" +
+      res.send("var milestones = " + JSON.stringify(milestones, null, 3) + ";\n" +
                "var status = " + JSON.stringify(status) + ";");
    });
 });

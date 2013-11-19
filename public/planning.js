@@ -231,9 +231,13 @@ Developper.prototype = {
 
       // if [start,end] overlap week-ends, count the numbers of days to add
       if ( start.weekNumber() != end.weekNumber() ) {
-         var diffDays = (end.weekNumber()-start.weekNumber())*2;
+         var diffWeeks = end.weekNumber()-start.weekNumber();
+         if(diffWeeks < 0) { diffWeeks = 52 + diffWeeks; }
+         var diffDays = (diffWeeks)*2;
          end = end.AddDays(diffDays);
       }
+
+      console.log(this.name, start, end, durationInDays);
 
       issue.planning = {
          start: start,
