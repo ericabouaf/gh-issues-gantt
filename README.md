@@ -40,7 +40,9 @@ Change the '#4F1D6B' to a darker version of the first color. (Or have light text
 
 Next, in public/config.js
 Find the line:
+````js
 "unassigned": "ganttRed"
+````
 and before it, add the line:
 
 ````js
