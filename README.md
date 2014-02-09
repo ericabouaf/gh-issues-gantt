@@ -22,7 +22,7 @@ $ npm install
 
 * copy public/config.example.js to public/config.js, and edit the options
 
-## Custom colors per dev
+## Custom colors per developer
 
 In public/stylesheets/style.css
 Add the lines:
