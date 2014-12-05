@@ -1,7 +1,7 @@
 # Github issues Gantt
 
 
-![Gantt Diagram](raw.githubusercontent.com/neyric/gh-issues-gantt/master/screenshot.png "GitHub Issues Gantt")
+![Gantt Diagram](screenshot.png?raw=true "GitHub Issues Gantt")
 
 
 ## Installation
