@@ -431,8 +431,7 @@ var Planning = {
 
       if(data.issue) { url = baseUrl + '/issues/'+data.issue; }
       if(data.milestone) { url = baseUrl + '/issues?milestone='+data.milestone; }
-      if(data.milestone_release) { url = baseUrl + '/issues/milestones/'+data.milestone_release+'/edit'; }
-
+      if(data.milestone_release) { url = baseUrl + '/milestones/'+data.milestone_release+'/edit'; }
       if(url) { window.open(url,"_blank"); }
    }
 
