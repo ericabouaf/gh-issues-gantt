@@ -2,7 +2,7 @@
 
 body { font-family: Helvetica, Arial, sans-serif; font-size: 13px; padding: 0 0 50px 0; }
 
-.contain { width: 1400px; margin: 0 auto;}
+.contain { margin: 0 auto; padding: 15px; }
 
 .fn-gantt .leftPanel .fn-label, .fn-gantt .leftPanel .name { width: 190px; }
 .fn-gantt .leftPanel .desc { width: 195px; }
