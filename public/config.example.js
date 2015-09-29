@@ -1,5 +1,6 @@
+module.exports = {
 
-var config = {
+   port: 3001,
 
    repo: 'user/repo',
 
