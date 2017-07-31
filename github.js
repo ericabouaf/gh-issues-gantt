@@ -1,11 +1,21 @@
-var request   = require('request'),
-    // github's API requires that we use specify a userAgent
-    // (see: http://developer.github.com/v3/#user-agent-required)
-    userAgent = "gh-issues-gantt/0.0.1"; // should match package.json
+var request = require('request');
 
 module.exports = function(config) {
 
-   var baseUrl = "https://api.github.com/repos/"+config.repo;
+   var baseUrl = "https://api.github.com/repos/" + config.repo;
+
+   // Factorize auth and headers setting
+   var baseRequest = request.defaults({
+      auth: {
+         user: config.username,
+         pass: config.password
+      },
+      // github's API requires that we use specify a userAgent
+      // (see: http://developer.github.com/v3/#user-agent-required)
+      headers: {
+         'User-Agent': "gh-issues-gantt/0.0.1" // should match package.json
+      }
+   });
 
    var memo = {
       issues: {
@@ -38,14 +48,12 @@ module.exports = function(config) {
 
    function refreshIssues (cb, url, tmpIssues) {
 
-      var theUrl = url || baseUrl+"/issues?per_page=100&status=open&direction=asc";
-      console.log(theUrl);
-      request.get({
-         url: theUrl,
-         'auth': config.username+":"+config.password,
-         headers: {
-            'User-Agent': userAgent
-         }
+      url = url || baseUrl + "/issues?per_page=100&status=open&direction=asc";
+
+      console.log("GET " + url);
+
+      baseRequest.get({
+         url: url,
       }, function (error, response, body) {
 
          var issues = (tmpIssues ? tmpIssues : []).concat(JSON.parse(body));
@@ -74,12 +82,12 @@ module.exports = function(config) {
 
    function refreshMilestones (cb) {
 
-      request.get({
-         url: baseUrl+"/milestones?per_page=100&status=open",
-         'auth': config.username+":"+config.password,
-         headers: {
-            'User-Agent': userAgent
-         }
+      var url = baseUrl + "/milestones?per_page=100&status=open";
+
+      console.log("GET " + url);
+
+      baseRequest.get({
+         url: url,
       }, function (error, response, body) {
          memo.milestones.value  = JSON.parse(body);
          memo.milestones.status = "fresh";
@@ -87,7 +95,7 @@ module.exports = function(config) {
       });
 
    }
-   
+
    function refresh (cb) {
       for (var key in memo) {
          if (memo.hasOwnProperty(key)) {
@@ -105,18 +113,14 @@ module.exports = function(config) {
       refresh: refresh,
 
       update_ms_due_on: function(milestoneId, due_on, cb) {
-         var url = baseUrl+"/milestones/"+milestoneId;
-         console.log(url);
+         var url = baseUrl + "/milestones/" + milestoneId;
 
-         request({
-            method:  "PATCH",
+         console.log("PATCH " + url);
+
+         baseRequest.patch({
             url: url,
             json: {
                "due_on": due_on
-            },
-            'auth': config.username+":"+config.password,
-            headers: {
-               'User-Agent': userAgent
             }
          }, function (error, response, body) {
             console.log(body);
