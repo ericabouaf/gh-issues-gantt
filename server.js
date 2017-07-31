@@ -1,4 +1,5 @@
-var express = require('express');
+var express = require('express'),
+    bodyParser = require('body-parser');
 
 var app = express(),
     config = require('./config.js');
@@ -7,7 +8,8 @@ var github = require('./github')(config);
 
 app.use(express["static"](__dirname + '/public'));
 
-app.use(express.bodyParser());
+// parse application/json
+app.use(bodyParser.json());
 
 app.get('/', function(req, res){
    res.sendfile(__dirname + '/public/index.html');
