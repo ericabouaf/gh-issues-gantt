@@ -1,128 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Github issues Gantt</title>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <link rel="stylesheet" href="http://taitems.github.com/jQuery.Gantt/css/style.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
-
 </head>
 <body>
+    <div class="contain">
+        <p><a href="/">&lt; Back to gantt diagram</a></p>
 
-		<div class="contain">
-			<p><a href="/">&lt; Back to gantt diagram</a></p>
-			<h1>Milestones</h1>
+        <h1>Milestones</h1>
 
-			<div id='msg' class="alert alert-block"></div>
+        <div id='msg' class="alert alert-block"></div>
 
-      		<div id='refresh-button-container'>
-        		<button id="refresh-button" class='btn'>Refresh</button>
-      		</div>
-      
-			<div id="milestonesContainer"></div>
+        <div id='refresh-button-container'>
+            <button id="refresh-button" class='btn'>Refresh</button>
+        </div>
 
-		</div>
-    
-	<script src="/lib/jquery-1.7.2.min.js"></script>
+        <div id="milestonesContainer"></div>
+    </div>
 
-	<!-- From server -->
-	<script src="/issues.js"></script>
-	<script src="/milestones.js"></script>
-	
-	<script src="/config.js"></script>
-	<script src="/date-functions.js"></script>
-	<script src="/lib/date-format.js"></script>
-	<script src="/planning.js"></script>
-	<script>
-		$(function() {
-			"use strict";
-			Planning.init();
+    <script src="/lib/jquery-1.7.2.min.js"></script>
 
-			function parseGanttDate(d) {
-				return new Date(parseInt(d.substr(6,13), 10));
-			}
+    <!-- From server -->
+    <script src="/issues.js"></script>
+    <script src="/milestones.js"></script>
 
-			window.milestonesByName = {};
-			milestones.forEach(function(m) {
-				milestonesByName[m.title] = m;
-			});
+    <script src="/config.js"></script>
+    <script src="/date-functions.js"></script>
+    <script src="/lib/date-format.js"></script>
+    <script src="/planning.js"></script>
+    <script>
+        $(function() {
+            "use strict";
+            Planning.init();
 
+            function parseGanttDate(d) {
+                return new Date(parseInt(d.substr(6,13), 10));
+            }
 
-			var plannedMilestones = Planning.getPlanningByMilestone().filter(function(o){ return o.name != " "; })
-			plannedMilestones.forEach(function(plannedMilestone) {
-			
-				var devStart = parseGanttDate(plannedMilestone.values[0].from);
-				var devEnd = parseGanttDate(plannedMilestone.values[0].to);
-
-				var releaseDate;
-				if(plannedMilestone.values[1]) {
-					releaseDate = parseGanttDate(plannedMilestone.values[1].to);
-				}
-
-				var joursHomme = milestonesByName[plannedMilestone.name].issues.map(function(i){ return i.calculatedDuration;}).reduce(function(a,b){ return a+b; });
+            window.milestonesByName = {};
+            milestones.forEach(function(m) {
+                milestonesByName[m.title] = m;
+            });
 
 
-				// DOM templating
+            var plannedMilestones = Planning.getPlanningByMilestone().filter(function (o) { return o.name != " "; });
 
-				var e = $("<div class='ms'><h3 class='milestoneName' id='milestone-"+plannedMilestone.number+"'></h3>"+
-						  "<p><span class='description'></span></p>"+
-						  "<p>Date de release fixée: <span class='releaseDate'></span></p>"+
-						  "<p>Développement : du <span class='startDate'></span> au <span class='endDate'></span> (reste <span class='totalJh'></span> j.h)</p>"+
-						  "</div>");
-			
-				$('h3', e).html(plannedMilestone.name);
+            plannedMilestones.forEach(function(plannedMilestone) {
+                var devStart = parseGanttDate(plannedMilestone.values[0].from);
+                var devEnd = parseGanttDate(plannedMilestone.values[0].to);
 
-				$('.startDate', e).html(devStart.format("shortDateLongYear"));
-				$('.endDate', e).html(devEnd.format("shortDateLongYear"));
-				$('.releaseDate', e).html( releaseDate ? releaseDate.format("shortDateLongYear") : "");
+                var releaseDate;
+                if (plannedMilestone.values[1]) {
+                    releaseDate = parseGanttDate(plannedMilestone.values[1].to);
+                }
 
-				$('.description', e).html( milestonesByName[plannedMilestone.name].description);
-				
-				$('.totalJh', e).html( joursHomme.toString() );
-				
+                var joursHomme = milestonesByName[plannedMilestone.name].
+                                    issues.
+                                    map(function (i) { return i.calculatedDuration; }).
+                                    reduce(function (a,b) { return a + b; });
 
-				if(releaseDate) {
-					if(devEnd > releaseDate) {
-						$('.endDate', e).css('color', 'red');
-						$('.endDate', e).css('font-weight', 'bold');
-					}
-				}
+                // DOM templating
+                var e = $("<div class='ms'>" +
+                            "<h3 class='milestoneName' id='milestone-" + plannedMilestone.number + "'></h3>" +
+                          "<p><span class='description'></span></p>" +
+                          "<p>Date de release fixée: <span class='releaseDate'></span></p>" +
+                          "<p>Développement : du <span class='startDate'></span> au <span class='endDate'></span> (reste <span class='totalJh'></span> j.h)</p>" +
+                          "</div>");
 
-				$('#milestonesContainer').append(e);
+                $('h3', e).html(plannedMilestone.name);
 
-			});
+                $('.startDate', e).html(devStart.format("shortDateLongYear"));
+                $('.endDate', e).html(devEnd.format("shortDateLongYear"));
+                $('.releaseDate', e).html(releaseDate ? releaseDate.format("shortDateLongYear") : "");
 
-	
-				$('.endDate').on('click', function(e) {
-					e.stopPropagation();
-					e.preventDefault();
+                $('.description', e).html(milestonesByName[plannedMilestone.name].description);
 
-					if( confirm("Fix this as the new release date ?") ) {
+                $('.totalJh', e).html(joursHomme.toString());
 
-						var h3id = $(this).parent().parent().children()[0].id;
-						var milestoneId = (h3id.split('-'))[1];
+                if (releaseDate) {
+                    if (devEnd > releaseDate) {
+                        $('.endDate', e).css('color', 'red');
+                        $('.endDate', e).css('font-weight', 'bold');
+                    }
+                }
 
-						var fr_date = this.innerHTML.split('/');
-						var date = fr_date[2]+"-"+fr_date[1]+"-"+fr_date[0]+"T00:00:00Z";
+                $('#milestonesContainer').append(e);
+            });
 
-						//console.log( milestoneId, date );
+            $('.endDate').on('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
 
-						$.ajax({
-  							url: "update_ms_due_on",
-  							type: "POST",
-						 	data: {
-						 		milestoneId: milestoneId,
-						 		due_on: date
-						 	}
-						}).done(function() {
-						});
+                if (confirm("Set this as the new release date ?")) {
 
-					}
-				});
+                    var h3id = $(this).parent().parent().children()[0].id;
+                    var milestoneId = (h3id.split('-'))[1];
 
-		});	
-	</script>
+                    var fr_date = this.innerHTML.split('/');
+                    var date = fr_date[2] + "-" + fr_date[1] + "-" + fr_date[0] + "T00:00:00Z";
+
+                    // console.log(milestoneId, date);
+
+                    $.ajax({
+                        url: "update_ms_due_on",
+                        type: "POST",
+                        data: {
+                            milestoneId: milestoneId,
+                            due_on: date
+                        }
+                    }).done(function() {});
+
+                }
+            });
+
+        });
+    </script>
 </body>
 </html>
