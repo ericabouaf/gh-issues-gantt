@@ -6,29 +6,35 @@
 
 ## Installation
 
-Requires Node.js
+Requires [Node.js](https://nodejs.org/en/)
 
-* Clone the git repository, and install dependencies
+In a shell, clone the git repository and install the dependencies:
 
 ````sh
-$ git clone git://github.com/neyric/gh-issues-gantt.git
-$ cd gh-issues-gantt
-$ npm install
+git clone git://github.com/neyric/gh-issues-gantt.git
+cd gh-issues-gantt
+npm install
 ````
 
 ## Configuration
 
-* copy config.example.js to config.js, and set the repo GitHub credentials
-* copy public/config.example.js to public/config.js, and edit the options
+* copy config.example.js to config.js
+* edit config.js to:
+    * set the GitHub repository and credentials
+    * add your Gantt configurations (colors, holidays, ...)
 
 
 ## Start the server
 
-    node server.js
+In a shell:
+
+````sh
+node server.js
+````
 
 Open http://localhost:3001
 
-/!\ The issues and milestones are downloaded ONLY the first time you access the page, click on the refresh button if you need to actualize them.
+:warning: The issues and milestones are downloaded **only** the first time you access the page, click on the refresh button if you need to actualize them.
 
 ## In GitHub
 
@@ -38,36 +44,23 @@ Open http://localhost:3001
 
 ## Custom colors per developer
 
-In public/stylesheets/style.css
-Add the lines:
+Edit your config.js file to define a color for each github username:
+````js
+colorByDev: {
+    "username1":     "ganttGreen",  // don't forget the comma
+    "otherUserName": "ganttOrange", // use the proper case in usernames
+    "unassigned":    "ganttRed"
+}
+````
 
+Colors available by default are: ganttBlue, ganttGreen, ganttOrange, ganttRed.
+
+You can add additional color definitions into public/stylesheets/style.css, e.g.:
 
 ````css
-.fn-gantt .ganttUser1 { background-color: #DCBFEE; } // The color of the issue
-.fn-gantt .ganttUser1 .fn-label { color: #4F1D6B; } // The color of the issue text
+.fn-gantt .ganttPurple { background-color: #DCBFEE; } // The color of the issue
+.fn-gantt .ganttPurple .fn-label { color: #4F1D6B; }  // The color of the text of the issue
 ````
-
-to the end somewhere.
-Change 'User1' to anything so long as it is the same for both. You can also add as many users as you want.
-Change the '#DCBFEE' to any HTML color.
-Change the '#4F1D6B' to a darker version of the first color. (Or have light text, and dark issues....)
-
-Next, in public/config.js
-Find the line:
-````js
-"unassigned": "ganttRed"
-````
-and before it, add the line:
-
-````js
-    "MySuperAwesomeGitHubUsername": "ganttUser1",
-````
-
-Take note:
-* Username is case sensitive.
-* Use the same style as you added to the .css file.
-* Remember to add a comma at the end of the line. (Page will not load charts if there is a syntax error)
-
 
 ## Credits
 
