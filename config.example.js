@@ -20,20 +20,20 @@ module.exports = {
       //
       // Beware that the github usernames are case sensitive.
       colorByDev: {
-         "neyric": "ganttBlue",
+         "gh-username": "ganttBlue",
          "unassigned": "ganttRed"
       },
 
       // Configure off periods
       holidays: {
-         "neyric": [
+         "gh-username": [
             { start: "2017-08-08", end: "2017-08-13", title: "Summer holidays"}
          ]
       },
 
       // Exclude milestones listed below from the Gantt Chart
       excludedMilestones: [
-         "Feature Paradize"
+         "Milestone Name"
       ],
 
       // Default duration (in days) for an issue which is not labelled
