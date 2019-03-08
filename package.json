@@ -9,6 +9,6 @@
     },
     "scripts": {
         "clean": "rm -rf build",
-        "build": "mkdir -p build; cp -r public/ build/; node generate.js"
+        "build": "mkdir -p build; cp -r public/* build/; node generate.js"
     }
 }
