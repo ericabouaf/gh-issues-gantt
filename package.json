@@ -6,5 +6,9 @@
         "express": "4.15.3",
         "body-parser": "1.17.2",
         "request": "2.81.0"
+    },
+    "scripts": {
+        "clean": "rm -rf build",
+        "build": "mkdir -p build; cp -r public/* build/; node generate.js"
     }
 }

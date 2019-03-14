@@ -14,3 +14,12 @@ body {
 
 .fn-gantt .ganttPurple { background-color: #DCBFEE; }
 .fn-gantt .ganttPurple .fn-label { color: #4F1D6B; }
+
+.fn-gantt .ganttPink { background-color: #ffcce6; }
+.fn-gantt .ganttPink .fn-label { color: #b30059; }
+
+.fn-gantt .ganttCyan { background-color:#80ffff; }
+.fn-gantt .ganttCyan .fn-label { color: #009999; }
+
+.fn-gantt .ganttCream { background-color:#f7ddbb; }
+.fn-gantt .ganttCream .fn-label { color: #885411; }
